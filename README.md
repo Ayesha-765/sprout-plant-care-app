@@ -1,56 +1,84 @@
-# Welcome to your Expo app 👋
+# 🌱 Sprout: Plant Care Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile app that helps you keep track of your plants and tells you which ones need water today. Built with **Expo**, **React Native** and **TypeScript** as a hands-on project for learning mobile development.
 
-## Get started
 
-1. Install dependencies
 
-   ```bash
-   npm install
-   ```
+## Features
 
-2. Start the app
+- **My Garden:** see all your plants and how many need water today
+- **Discover:** search and filter a plant catalog by difficulty, then add plants to your garden
+- **Add a plant:** custom form with icon picker, watering interval, and light level, with input validation
+- **Plant details:** open any plant to mark it as watered or remove it (with confirmation)
+- **Profile:** garden stats, dark mode toggle, and a "clear my garden" option
+- **Light and dark themes** with a custom colour palette
 
-   ```bash
-   npx expo start
-   ```
+## Tech Stack
 
-In the output, you'll find options to open the app in a
+- [Expo](https://expo.dev) (managed workflow)
+- React Native + TypeScript
+- [Expo Router](https://docs.expo.dev/router/introduction/) (file-based navigation)
+- React Context API for global state
+- `@expo/vector-icons` for tab icons
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Project Structure
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+src/
+├── app/                    # Screens (file-based routing)
+│   ├── _layout.tsx         # Root stack + providers
+│   ├── (tabs)/
+│   │   ├── _layout.tsx     # Tab bar
+│   │   ├── index.tsx       # Garden
+│   │   ├── explore.tsx     # Discover
+│   │   ├── add.tsx         # Add a plant
+│   │   └── profile.tsx     # Profile
+│   ├── plant
+│   │   └── plant/[id].tsx  # Plant details (dynamic route)
+├── components/             # AppButton, Chip, PlantCard
+├── constants/colors.ts     # Light and dark palettes
+├── context/                # PlantsContext, ThemeContext
+└── data/catalog.ts         # Sample plant catalog
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+## How Navigation Works
 
-### Other setup steps
+- The root layout wraps the app in a **Stack** and the global providers.
+- The `(tabs)` group renders a **bottom tab bar** with four tabs.
+- Tapping a plant calls `router.push('/plant/<id>')`, which opens the dynamic route `plant/[id].tsx`. The `id` is read with `useLocalSearchParams`.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Getting Started
 
-## Learn more
+```bash
+# 1. Clone the repo
+git clone https://github.com/Ayesha-765/sprout-plant-care-app.git
+cd sprout-plant-care-app
 
-To learn more about developing your project with Expo, look at the following resources:
+# 2. Install dependencies
+npm install
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# 3. Start the dev server
+npx expo start
+```
 
-## Join the community
+Then scan the QR code with the **Expo Go** app on your phone, or press `a` for an Android emulator or `i` for an iOS simulator.
 
-Join our community of developers creating universal apps.
+## What I Practiced
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Core components: `View`, `Text`, `Pressable`, `TextInput`, `FlatList`, `ScrollView`, `Switch`
+- Styling with `StyleSheet`, flexbox, safe areas, shadows and elevation
+- Reusable, typed components and props
+- State with `useState` and shared state with Context
+- Expo Router: tabs, stack, and dynamic routes
+- Keyboard handling, form validation, and confirmation dialogs
+
+## Roadmap
+
+- [ ] Persist plants with AsyncStorage
+- [ ] Replace emoji with plant photos using `Image`
+- [ ] Edit plant details in a modal
+- [ ] Watering reminders with notifications
+
+## Author
+
+**Ayesha**: [GitHub](https://github.com/Ayesha-765/)
