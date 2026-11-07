@@ -1,6 +1,7 @@
-import { Light } from '@/context/PlantsContext';
+import { Light } from "@/context/PlantsContext";
+import { supabase } from "@/lib/supabase";
 
-export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+export type Difficulty = "Easy" | "Medium" | "Hard";
 
 export type CatalogItem = {
   id: string;
@@ -13,11 +14,39 @@ export type CatalogItem = {
   tip: string;
 };
 
-export const catalog: CatalogItem[] = [
-  { id: 'c1', name: 'Aloe Vera', species: 'Aloe barbadensis', emoji: '🌵', difficulty: 'Easy', waterEvery: 14, light: 'Bright', tip: 'Let the soil dry fully between waterings.' },
-  { id: 'c2', name: 'Pothos', species: 'Epipremnum aureum', emoji: '🌿', difficulty: 'Easy', waterEvery: 7, light: 'Low', tip: 'Forgiving and fast-growing. Great for beginners.' },
-  { id: 'c3', name: 'Peace Lily', species: 'Spathiphyllum', emoji: '🌸', difficulty: 'Medium', waterEvery: 5, light: 'Medium', tip: 'Droops when thirsty, so it tells you when to water.' },
-  { id: 'c4', name: 'Fiddle Leaf Fig', species: 'Ficus lyrata', emoji: '🍀', difficulty: 'Hard', waterEvery: 7, light: 'Bright', tip: 'Dislikes being moved. Keep it in one bright spot.' },
-  { id: 'c5', name: 'Spider Plant', species: 'Chlorophytum', emoji: '🪴', difficulty: 'Easy', waterEvery: 6, light: 'Medium', tip: 'Produces baby plants you can re-pot.' },
-  { id: 'c6', name: 'Orchid', species: 'Phalaenopsis', emoji: '🌺', difficulty: 'Hard', waterEvery: 7, light: 'Medium', tip: 'Water the roots, not the leaves.' },
-];
+// One row exactly as it comes from the database (snake_case)
+type CatalogRow = {
+  id: string;
+  name: string;
+  species: string;
+  emoji: string;
+  difficulty: Difficulty;
+  water_every: number;
+  light: Light;
+  tip: string;
+};
+
+export async function fetchCatalog(): Promise<{
+  items: CatalogItem[];
+  error: string | null;
+}> {
+  const { data, error } = await supabase
+    .from("catalog_plants")
+    .select("id, name, species, emoji, difficulty, water_every, light, tip")
+    .order("name");
+
+  if (error) return { items: [], error: error.message };
+
+  const items = (data as CatalogRow[]).map((row) => ({
+    id: row.id,
+    name: row.name,
+    species: row.species,
+    emoji: row.emoji,
+    difficulty: row.difficulty,
+    waterEvery: row.water_every,
+    light: row.light,
+    tip: row.tip,
+  }));
+
+  return { items, error: null };
+}

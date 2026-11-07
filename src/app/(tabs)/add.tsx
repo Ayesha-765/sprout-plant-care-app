@@ -25,16 +25,24 @@ export default function AddScreen() {
 
   const inputStyle = [styles.input, { backgroundColor: theme.card, borderColor: theme.border, color: theme.text }];
 
-  const save = () => {
+  const save = async () => {
     if (!name.trim()) {
       Alert.alert('Name needed', 'Please give your plant a name.');
       return;
     }
-    addPlant({ name: name.trim(), species: species.trim() || 'Unknown species', emoji, waterEvery, light });
+    const ok = await addPlant({
+      name: name.trim(),
+      species: species.trim() || 'Unknown species',
+      emoji,
+      waterEvery,
+      light,
+    });
+    if (!ok) return;
+
     setName('');
     setSpecies('');
     Keyboard.dismiss();
-    router.navigate('/'); // go back to the Garden tab
+    router.navigate('/');
   };
 
   return (

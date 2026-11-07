@@ -24,9 +24,9 @@ export default function PlantDetailScreen() {
       {
         text: 'Remove',
         style: 'destructive',
-        onPress: () => {
-          removePlant(plant.id);
-          router.back();
+        onPress: async () => {
+          const ok = await removePlant(plant.id);
+          if (ok) router.back();
         },
       },
     ]);
@@ -61,6 +61,7 @@ export default function PlantDetailScreen() {
 
       <View style={{ gap: 12, marginTop: 24 }}>
         <AppButton title="💧 I watered it" onPress={() => waterPlant(plant.id)} />
+        <AppButton title="Edit plant" variant="ghost" onPress={() => router.push(`/edit/${plant.id}`)} />
         <AppButton title="Remove plant" variant="danger" onPress={confirmRemove} />
       </View>
     </ScrollView>

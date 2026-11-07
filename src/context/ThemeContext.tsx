@@ -1,22 +1,23 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
 import { useColorScheme } from 'react-native';
 import { palette, Theme } from '@/constants/colors';
+import { useProfile } from '@/context/ProfileContext';
 
 type ThemeCtx = { theme: Theme; isDark: boolean; toggle: () => void };
 
 const ThemeContext = createContext<ThemeCtx | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const system = useColorScheme(); // phone's light/dark setting
-  const [override, setOverride] = useState<'light' | 'dark' | null>(null);
+  const system = useColorScheme();
+  const { darkMode, setDarkMode } = useProfile();
 
-  const mode = override ?? system ?? 'light';
-  const isDark = mode === 'dark';
+  // Saved choice wins; if there is none, follow the phone
+  const isDark = darkMode === null ? system === 'dark' : darkMode;
 
   const value: ThemeCtx = {
-    theme: palette[mode],
+    theme: isDark ? palette.dark : palette.light,
     isDark,
-    toggle: () => setOverride(isDark ? 'light' : 'dark'),
+    toggle: () => setDarkMode(!isDark),
   };
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
